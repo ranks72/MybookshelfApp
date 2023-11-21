@@ -15,6 +15,20 @@ header {
     background: #5F30E2;
     padding: 16px;
     color: white;
+    overflow: hidden;
+}
+
+.search{
+    overflow: hidden;
+}
+
+.search .box{
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
 }
 
 .wrapper {
