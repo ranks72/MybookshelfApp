@@ -55,7 +55,6 @@ header {
     display: flex;
     padding: 16px;
     flex-direction: column;
-    height: 300px;
     border-radius: 16px;
 }
 
