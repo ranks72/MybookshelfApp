@@ -12,37 +12,24 @@
     <header>
       <h1>Bookshelf Apps</h1>
     </header>
-    <div class="search">
-      <form class="box" id="searchBook">
-        <h4>Cari Buku</h4>
-          <label class="form-label" for="searchBookTitle">Judul</label>
-          <div class="input-group">
-              <input class="form-control " id="searchBookTitle" type="text">
-              <button class="btn btn-primary" type="submit">
-                  <i class="bi bi-search"></i>
-              </button>
-          </div>
-      </form>
-    </div>
 
     <div class="wrapper">
       <div class="container bg-white shadow" id="add-book">
         <h2 class="container-header text-center">Masukan Buku Baru</h2>
         <form class="form" action="#" id="form">
-
           <div class="form-group form-title">
             <label for="title">Masukkan Judul Buku</label>
-            <input type="text" id="title" name="title" type="text" required />
+            <input type="text" id="titleBook" name="title" type="text" placeholder="Masukan disini..." required />
           </div>
 
           <div class="form-group form-title">
-            <label for="title">Masukkan Author Buku</label>
-            <input type="text" id="author" name="author" type="text" required />
+            <label for="author">Masukkan Author Buku</label>
+            <input type="text" id="author" name="author" type="text" placeholder="Masukan disini..." required />
           </div>
 
           <div class="form-group form-title">
-            <label for="title">Masukkan Tahun Buku Rilis</label>
-            <input type="text" id="author" name="author" type="number" required />
+            <label for="terbit">Masukkan Tahun Buku Rilis</label>
+            <input type="text" id="tahunRilis" name="tahunRilis" type="number" placeholder="Masukan disini..." required />
           </div>
 
           <div class="form-group form-title">
@@ -51,11 +38,27 @@
           </div>
 
           <div>
-            <input class="form-check-input" id="inputBookIsComplete" type="checkbox">
-            <label class="form-check-label" for="inputBookIsComplete">Selesai dibaca</label>
+            <input class="form-check-input" id="inputBookIsComplete" type="checkbox" />
+            <label class="form-check-label" for="checkStatusBook">Selesai dibaca</label>
           </div>
           <input type="submit" value="Submit" name="Submit" class="btn-submit" />
         </form>
+      </div>
+
+      <div class="wrapper">
+        <div class="container">
+          <div class="search box">
+            <h2 class="title">Cari Buku</h2>
+            <form id="formSearch" action="" method="post">
+              <div class="form-group">
+                <input type="text" name="pencarian" id="pencarian" placeholder="cari disini..." />
+              </div>
+              <div class="form-search-buttom">
+                <button type="submit" class="searchButton"><i class="bx bx-search-alt-2"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
       <!-- Container TODO -->

@@ -1,154 +1,182 @@
-const todos = [];
-const RENDER_EVENT = "render-todo";
+const books = [];
+const RENDER_EVENT = "renderEvent";
 
-document.addEventListener("DOMContentLoaded", function () {
-  const submitForm = document.getElementById("form");
-  submitForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    addTodo();
-  });
-});
-
-function addTodo() {
-  const titleBook = document.getElementById("title").value;
+function addBook() {
+  const titleBook = document.getElementById("titleBook").value;
   const authorBook = document.getElementById("author").value;
+  const yearsBook = document.getElementById("tahunRilis").value;
+  const isCompleted = document.getElementById("inputBookIsComplete");
   const timestamp = document.getElementById("date").value;
 
-  const generatedID = generateId();
-  const todoObject = generateTodoObject(generatedID, titleBook, authorBook,timestamp, false);
-  todos.push(todoObject);
+  let status;
+  if (isCompleted.checked) {
+    status = true;
+  } else {
+    status = false;
+  }
+
+  books.push({ id: +new Date(), title: titleBook, author: authorBook, year: Number(yearsBook), isCompleted: status, timestamp: timestamp });
 
   document.dispatchEvent(new Event(RENDER_EVENT));
-}
-
-function generateId() {
-  return +new Date();
-}
-
-function generateTodoObject(id, title, author, timestamp, isCompleted) {
-  return {
-    id,
-    title,
-    author,
-    timestamp,
-    isCompleted,
-  };
+  saveData();
 }
 
 document.addEventListener(RENDER_EVENT, function () {
-  console.log(todos);
+  console.log(books);
+  const unCompleted = document.getElementById("unComplete");
+  unCompleted.innerHTML = "";
+
+  const isCompleted = document.getElementById("isComplete");
+  isCompleted.innerHTML = "";
+
+  for (const bookItem of books) {
+    const bookElement = makeBook(bookItem);
+    if (!bookItem.isCompleted) {
+      unCompleted.append(bookElement);
+    } else {
+      isCompleted.append(bookElement);
+    }
+  }
 });
 
-function makeTodo(todoObject) {
-  const textTitle = document.createElement("h2");
-  textTitle.innerText = todoObject.title;
+function makeBook(objectBook) {
+  const textTitle = document.createElement("p");
+  textTitle.classList.add("itemTitle");
+  textTitle.innerHTML = `${objectBook.title} - ${objectBook.year}`;
 
   const textAuthor = document.createElement("p");
-  textAuthor.innerText = todoObject.author;
-
-  const textTimestamp = document.createElement("p");
-  textTimestamp.innerText = todoObject.timestamp;
+  textAuthor.classList.add("itemAuthor");
+  textAuthor.innerText = objectBook.author;
 
   const textContainer = document.createElement("div");
-  textContainer.classList.add("inner");
-  textContainer.append(textTitle, textAuthor,textTimestamp);
+  textContainer.classList.add("itemText");
+  textContainer.append(textTitle, textAuthor);
+
+  const actionContainer = document.createElement("div");
+  actionContainer.classList.add("itemAction");
 
   const container = document.createElement("div");
-  container.classList.add("item", "shadow");
+  container.classList.add("item");
   container.append(textContainer);
-  container.setAttribute("id", `todo-${todoObject.id}`);
+  container.setAttribute("id", `book-${objectBook.id}`);
 
-  //button completed or not
-  if (todoObject.isCompleted) {
+  if (objectBook.isCompleted) {
     const undoButton = document.createElement("button");
-    undoButton.classList.add("undo-button");
+    undoButton.classList.add("undoButton");
+    undoButton.innerHTML = `<i class='bx bx-undo'></i>`;
 
     undoButton.addEventListener("click", function () {
-      undoTaskFromCompleted(todoObject.id);
+      undoBookFromCompleted(objectBook.id);
     });
 
     const trashButton = document.createElement("button");
-    trashButton.classList.add("trash-button");
+    trashButton.classList.add("trashButton");
+    trashButton.innerHTML = `<i class='bx bx-trash'></i>`;
 
     trashButton.addEventListener("click", function () {
-      removeTaskFromCompleted(todoObject.id);
+      removeBookFromCompleted(objectBook.id);
     });
 
-    container.append(undoButton, trashButton);
+    actionContainer.append(undoButton, trashButton);
+    container.append(actionContainer);
   } else {
     const checkButton = document.createElement("button");
-    checkButton.classList.add("check-button");
+    checkButton.classList.add("checkButton");
+    checkButton.innerHTML = `<i class='bx bx-check'></i>`;
 
     checkButton.addEventListener("click", function () {
-      addTaskToCompleted(todoObject.id);
+      addBookToCompleted(objectBook.id);
     });
 
-    container.append(checkButton);
-  }
+    const trashButton = document.createElement("button");
+    trashButton.classList.add("trashButton");
+    trashButton.innerHTML = `<i class='bx bx-trash'></i>`;
 
+    trashButton.addEventListener("click", function () {
+      removeBookFromCompleted(objectBook.id);
+    });
+
+    actionContainer.append(checkButton, trashButton);
+    container.append(actionContainer);
+  }
   return container;
 }
 
-document.addEventListener(RENDER_EVENT, function () {
-  console.log(todos);
-  const uncompletedTODOList = document.getElementById("todos");
-  uncompletedTODOList.innerHTML = "";
+function addBookToCompleted(bookId) {
+  const bookTarget = findBook(bookId);
 
-  const completedTODOList = document.getElementById("complated-tasks");
-  completedTODOList.innerHTML = "";
+  if (bookTarget == null) return;
 
-  for (const todoItem of todos) {
-    const todoElement = makeTodo(todoItem);
-    if (!todoItem.isCompleted) {
-      uncompletedTODOList.append(todoElement);
-    } else {
-      completedTODOList.append(todoElement);
-    }
-  }
-});
-
-function addTaskToCompleted(todoId) {
-  const todoTarget = findTodo(todoId);
-
-  if (todoTarget == true) return;
-
-  todoTarget.isCompleted = true;
+  bookTarget.isCompleted = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
-function findTodo(todoId) {
-  for (const todoItem of todos) {
-    if (todoItem.id === todoId) {
-      return todoItem;
+function findBook(bookId) {
+  for (const bookItem of books) {
+    if (bookItem.id === bookId) {
+      return bookItem;
     }
   }
+
   return null;
 }
 
-function removeTaskFromCompleted(todoID) {
-  const todoTarget = findTodoIndex(todoID);
+function removeBookFromCompleted(bookId) {
+  const bookTarget = findBookIndex(bookId);
 
-  if (todoTarget === -1) return;
+  if (bookTarget === -1) return;
 
-  todos.splice(todoTarget, 1);
+  books.splice(bookTarget, 1);
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
-function findTodoIndex(todoId) {
-  for (const index in todos) {
-    if (todos[index].id === todoId) {
+function undoBookFromCompleted(bookId) {
+  const bookTarget = findBook(bookId);
+
+  if (bookTarget == null) return;
+
+  bookTarget.isCompleted = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function findBookIndex(bookId) {
+  for (const index in books) {
+    if (books[index].id === bookId) {
       return index;
     }
   }
-
   return -1;
 }
 
-function undoTaskFromCompleted(todoID) {
-  const todoTarget = findTodo(todoID);
+document.addEventListener("DOMContentLoaded", function () {
+  const saveForm = document.getElementById("formBuku");
+  saveForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addBook();
+  });
 
-  if (todoTarget == null) return;
+  const searchForm = document.getElementById("formSearch");
+  searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    searchBook();
+  });
 
-  todoTarget.isCompleted = false;
-  document.dispatchEvent(new Event(RENDER_EVENT));
+  if (isStorageExist()) {
+    loadDataFromStorage();
+  }
+});
+
+function searchBook() {
+  const searchInput = document.getElementById("pencarian").value;
+  const moveBook = document.querySelectorAll(".itemTitle");
+
+  for (const move of moveBook) {
+    if (searchInput !== move.innerText) {
+      console.log(move.innerText);
+      move.parentElement.remove();
+    }
+  }
 }
