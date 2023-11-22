@@ -23,10 +23,10 @@ function addBook() {
 
 document.addEventListener(RENDER_EVENT, function () {
   console.log(books);
-  const unCompleted = document.getElementById("unComplete");
+  const unCompleted = document.getElementById("unCompleted");
   unCompleted.innerHTML = "";
 
-  const isCompleted = document.getElementById("isComplete");
+  const isCompleted = document.getElementById("Completed");
   isCompleted.innerHTML = "";
 
   for (const bookItem of books) {
@@ -152,17 +152,17 @@ function findBookIndex(bookId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const saveForm = document.getElementById("formBuku");
-  saveForm.addEventListener("submit", function (event) {
+  const saveForm = document.getElementById("formBook");
+  saveForm.addEventListener("Submit", function (event) {
     event.preventDefault();
     addBook();
   });
 
-  const searchForm = document.getElementById("formSearch");
-  searchForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    searchBook();
-  });
+  // const searchForm = document.getElementById("formSearch");
+  // searchForm.addEventListener("Submit", function (event) {
+  //   event.preventDefault();
+  //   searchBook();
+  // });
 
   if (isStorageExist()) {
     loadDataFromStorage();
