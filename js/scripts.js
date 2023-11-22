@@ -6,7 +6,6 @@ function addBook() {
   const authorBook = document.getElementById("author").value;
   const yearsBook = document.getElementById("tahunRilis").value;
   const isCompleted = document.getElementById("inputBookIsComplete");
-  const timestamp = document.getElementById("date").value;
 
   let status;
   if (isCompleted.checked) {
@@ -15,7 +14,7 @@ function addBook() {
     status = false;
   }
 
-  books.push({ id: +new Date(), title: titleBook, author: authorBook, year: Number(yearsBook), isCompleted: status, timestamp: timestamp });
+  books.push({ id: +new Date(), title: titleBook, author: authorBook, year: Number(yearsBook), isCompleted: status });
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
@@ -40,7 +39,7 @@ document.addEventListener(RENDER_EVENT, function () {
 });
 
 function makeBook(objectBook) {
-  const textTitle = document.createElement("p");
+  const textTitle = document.createElement("h2");
   textTitle.classList.add("itemTitle");
   textTitle.innerHTML = `${objectBook.title} - ${objectBook.year}`;
 
@@ -62,16 +61,14 @@ function makeBook(objectBook) {
 
   if (objectBook.isCompleted) {
     const undoButton = document.createElement("button");
-    undoButton.classList.add("undoButton");
-    undoButton.innerHTML = `<i class='bx bx-undo'></i>`;
+    undoButton.classList.add("undo-button");
 
     undoButton.addEventListener("click", function () {
       undoBookFromCompleted(objectBook.id);
     });
 
     const trashButton = document.createElement("button");
-    trashButton.classList.add("trashButton");
-    trashButton.innerHTML = `<i class='bx bx-trash'></i>`;
+    trashButton.classList.add("trash-button");
 
     trashButton.addEventListener("click", function () {
       removeBookFromCompleted(objectBook.id);
@@ -81,16 +78,16 @@ function makeBook(objectBook) {
     container.append(actionContainer);
   } else {
     const checkButton = document.createElement("button");
-    checkButton.classList.add("checkButton");
-    checkButton.innerHTML = `<i class='bx bx-check'></i>`;
+    checkButton.classList.add("check-button");
+    //checkButton.innerHTML = `<i class='bx bx-check'></i>`;
 
     checkButton.addEventListener("click", function () {
       addBookToCompleted(objectBook.id);
     });
 
     const trashButton = document.createElement("button");
-    trashButton.classList.add("trashButton");
-    trashButton.innerHTML = `<i class='bx bx-trash'></i>`;
+    trashButton.classList.add("trash-button");
+    //trashButton.innerHTML = `<i class='bx bx-trash'></i>`;
 
     trashButton.addEventListener("click", function () {
       removeBookFromCompleted(objectBook.id);
@@ -153,16 +150,16 @@ function findBookIndex(bookId) {
 
 document.addEventListener("DOMContentLoaded", function () {
   const saveForm = document.getElementById("formBook");
-  saveForm.addEventListener("Submit", function (event) {
+  saveForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addBook();
   });
 
-  // const searchForm = document.getElementById("formSearch");
-  // searchForm.addEventListener("Submit", function (event) {
-  //   event.preventDefault();
-  //   searchBook();
-  // });
+  const searchForm = document.getElementById("formSearch");
+  searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    searchBook();
+  });
 
   if (isStorageExist()) {
     loadDataFromStorage();
