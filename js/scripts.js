@@ -5,16 +5,16 @@ function addBook() {
   const titleBook = document.getElementById("titleBook").value;
   const authorBook = document.getElementById("author").value;
   const yearsBook = document.getElementById("tahunRilis").value;
-  const isCompleted = document.getElementById("inputBookIsComplete");
+  const isComplete = document.getElementById("inputBookIsComplete");
 
   let status;
-  if (isCompleted.checked) {
+  if (isComplete.checked) {
     status = true;
   } else {
     status = false;
   }
 
-  books.push({ id: +new Date(), title: titleBook, author: authorBook, year: Number(yearsBook), isCompleted: status });
+  books.push({ id: +new Date(), title: titleBook, author: authorBook, year: Number(yearsBook), isComplete: status });
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
@@ -25,15 +25,15 @@ document.addEventListener(RENDER_EVENT, function () {
   const unCompleted = document.getElementById("unCompleted");
   unCompleted.innerHTML = "";
 
-  const isCompleted = document.getElementById("Completed");
-  isCompleted.innerHTML = "";
+  const isComplete = document.getElementById("Completed");
+  isComplete.innerHTML = "";
 
   for (const bookItem of books) {
     const bookElement = makeBook(bookItem);
-    if (!bookItem.isCompleted) {
+    if (!bookItem.isComplete) {
       unCompleted.append(bookElement);
     } else {
-      isCompleted.append(bookElement);
+      isComplete.append(bookElement);
     }
   }
 });
@@ -59,7 +59,7 @@ function makeBook(objectBook) {
   container.append(textContainer);
   container.setAttribute("id", `book-${objectBook.id}`);
 
-  if (objectBook.isCompleted) {
+  if (objectBook.isComplete) {
     const undoButton = document.createElement("button");
     undoButton.classList.add("undo-button");
 
@@ -104,7 +104,7 @@ function addBookToCompleted(bookId) {
 
   if (bookTarget == null) return;
 
-  bookTarget.isCompleted = true;
+  bookTarget.isComplete = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
@@ -134,7 +134,7 @@ function undoBookFromCompleted(bookId) {
 
   if (bookTarget == null) return;
 
-  bookTarget.isCompleted = false;
+  bookTarget.isComplete = false;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
@@ -150,12 +150,13 @@ function findBookIndex(bookId) {
 
 document.addEventListener("DOMContentLoaded", function () {
   const saveForm = document.getElementById("formBook");
+  const searchForm = document.getElementById("formSearch");
   saveForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addBook();
   });
 
-  const searchForm = document.getElementById("formSearch");
+  
   searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
     searchBook();
@@ -167,11 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function searchBook() {
-  const searchInput = document.getElementById("pencarian").value;
+  const searchInput = document.getElementById("searchBookTitle").value;
   const moveBook = document.querySelectorAll(".itemTitle");
 
   for (const move of moveBook) {
-    if (searchInput !== move.innerText) {
+    if (move.innerText.toLowerCase().indexOf(searchInput.toLowerCase())) {
       console.log(move.innerText);
       move.parentElement.remove();
     }
