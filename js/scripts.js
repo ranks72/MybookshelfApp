@@ -172,7 +172,6 @@ function searchBook() {
   const moveBook = document.querySelectorAll(".itemTitle");
 
   for (const move of moveBook) {
-    const 
     if (move.innerHTML.toLowerCase().indexOf(searchInput.toLowerCase())) {
       console.log(move.innerText);
       move.parentElement.remove();
